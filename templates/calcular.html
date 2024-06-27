@@ -5,14 +5,21 @@
     <title>Calcular Aleaciones</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const mode = localStorage.getItem('mode') || 'light-mode';
+            document.body.classList.add(mode);
+        });
+
         function toggleMode() {
             const body = document.body;
             if (body.classList.contains('dark-mode')) {
                 body.classList.remove('dark-mode');
                 body.classList.add('light-mode');
+                localStorage.setItem('mode', 'light-mode');
             } else {
                 body.classList.remove('light-mode');
                 body.classList.add('dark-mode');
+                localStorage.setItem('mode', 'dark-mode');
             }
         }
     </script>
