@@ -47,17 +47,29 @@ CREATE TABLE IF NOT EXISTS IngredientesTotales (
 
 # Insertar datos de ejemplo en la tabla de aleaciones
 aleaciones = [
-    ('Steel Ingot',), ('Bronze Ingot',), ('Brass Ingot',), ('Billon Ingot',),
-    ('Nickel Ingot',), ('Duralumin Ingot',), ('Gilded Iron',), ('Cobalt Ingot',),
-    ('Ferrosilicon',), ('Aluminum Brass Ingot',), ('Aluminum Bronze Ingot',),
-    ('Corinthian Bronze Ingot',), ('Damascus Steel Ingot',), ('Solder Ingot',),
-    ('Hardened Metal',), ('Redstone Alloy Ingot',), ('Reinforced Alloy Ingot',)
+    ('Steel Ingot',), 
+    ('Bronze Ingot',),
+    ('Brass Ingot',), 
+    ('Billon Ingot',),
+    ('Nickel Ingot',), 
+    ('Duralumin Ingot',), 
+    ('Gilded Iron',), 
+    ('Cobalt Ingot',),
+    ('Ferrosilicon',), 
+    ('Aluminum Brass Ingot',), 
+    ('Aluminum Bronze Ingot',),
+    ('Corinthian Bronze Ingot',), 
+    ('Damascus Steel Ingot',), 
+    ('Solder Ingot',),
+    ('Hardened Metal',), 
+    ('Redstone Alloy Ingot',), 
+    ('Reinforced Alloy Ingot',)
 ]
 c.executemany('INSERT INTO Aleaciones (nombre) VALUES (?)', aleaciones)
 
 # Insertar datos de ejemplo en la tabla de ingredientes
 ingredientes = [
-    (1, 'Iron Dust', 1), (1, 'Carbon Compress', 1), (1, 'Iron Ingot', 1),
+    (1, 'Iron Dust', 1), (1, 'Carbon', 1), (1, 'Iron Ingot', 1),
     (2, 'Copper Dust', 1), (2, 'Tin Dust', 1), (2, 'Copper Ingot', 1),
     (3, 'Copper Dust', 1), (3, 'Zinc Dust', 1), (3, 'Copper Ingot', 1),
     (4, 'Silver Dust', 1), (4, 'Copper Dust', 1), (4, 'Silver Ingot', 1),
@@ -69,11 +81,11 @@ ingredientes = [
     (10, 'Aluminum Dust', 1), (10, 'Brass Ingot', 1), (10, 'Aluminum Ingot', 1),
     (11, 'Aluminum Dust', 1), (11, 'Bronze Ingot', 1), (11, 'Aluminum Ingot', 1),
     (12, 'Silver Dust', 1), (12, 'Gold Dust', 1), (12, 'Copper Dust', 1), (12, 'Bronze Ingot', 1),
-    (13, 'Steel Ingot', 1), (13, 'Iron Dust', 1), (13, 'Carbon Compress', 1), (13, 'Iron Ingot', 1),
+    (13, 'Steel Ingot', 1), (13, 'Iron Dust', 1), (13, 'Carbon', 1), (13, 'Iron Ingot', 1),
     (14, 'Lead Dust', 1), (14, 'Tin Dust', 1), (14, 'Lead Ingot', 1),
     (15, 'Damascus Steel Ingot', 1), (15, 'Duralumin Ingot', 1), (15, 'Compressed Coal', 1), (15, 'Aluminum Bronze Ingot', 1),
     (16, 'Redstone Dust', 1), (16, 'Redstone Block', 1), (16, 'Ferrosilicon', 1), (16, 'Hardened Metal', 1),
-    (17, 'Damascus Steel Ingot', 1), (17, 'Hardened Metal', 1), (17, 'Corinthian Bronze Ingot', 1), (17, 'Solder Ingot', 1), (17, 'Gold Ingot', 1), (17, 'Gold Ingot (24k)', 1)
+    (17, 'Damascus Steel Ingot', 1), (17, 'Hardened Metal', 1), (17, 'Corinthian Bronze Ingot', 1), (17, 'Solder Ingot', 1), (17, 'Billon Ingot', 1), (17, 'Gold Ingot (24k)', 1)
 ]
 c.executemany('INSERT INTO Ingredientes (aleacion_id, ingrediente, cantidad) VALUES (?, ?, ?)', ingredientes)
 
@@ -83,12 +95,16 @@ dependencias = [
     (11, 2),  # Aluminum Bronze Ingot depende de Bronze Ingot
     (12, 2),  # Corinthian Bronze Ingot depende de Bronze Ingot
     (13, 1),  # Damascus Steel Ingot depende de Steel Ingot
+    (15, 11), # Hardened Metal depende de Aluminum Bronze Ingot
     (15, 13), # Hardened Metal depende de Damascus Steel Ingot
     (16, 9),  # Redstone Alloy Ingot depende de Ferrosilicon
+    (17, 4),  # Reinforced Alloy Ingot depende de Billon Ingot
+    (17, 12), # Reinforced Alloy Ingot depende de Corinthian Bronze Ingot
+    (17, 13), # Reinforced Alloy Ingot depende de Damascus Steel Ingot
     (17, 15), # Reinforced Alloy Ingot depende de Hardened Metal
     (17, 14)  # Reinforced Alloy Ingot depende de Solder Ingot
 ]
-c.executemany('INSERT INTO Dependencias (aleacion_id, depende_de_id) VALUES (?, ?, ?)', dependencias)
+c.executemany('INSERT INTO Dependencias (aleacion_id, depende_de_id) VALUES (?, ?)', dependencias)
 
 # Insertar datos de ejemplo en la tabla de ingredientes totales
 ingredientes_totales = [
