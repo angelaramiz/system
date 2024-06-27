@@ -2,11 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World</title>
+    <title>Inicio</title>
   </head>
-
   <body>
-    <h1>Hello World</h1>
+    <h1>Menú Principal</h1>
+    <ul>
+      <li><a href="{{ url_for('calcular') }}">Calcular Aleaciones</a></li>
+      <li><a href="{{ url_for('agregar') }}">Agregar Aleación</a></li>
+    </ul>
   </body>
 </html>
