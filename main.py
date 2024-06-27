@@ -1,4 +1,3 @@
-import os
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
@@ -20,10 +19,12 @@ def calcular():
     resultado = None
     if request.method == 'POST':
         aleacion_id = request.form['aleacion']
+        cantidad = int(request.form['cantidad'])
         ingredientes = conn.execute('SELECT * FROM Ingredientes WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
         resultado = {
             'aleacion': conn.execute('SELECT * FROM Aleaciones WHERE id = ?', (aleacion_id,)).fetchone(),
-            'ingredientes': ingredientes
+            'ingredientes': [{'ingrediente': i['ingrediente'], 'cantidad': i['cantidad'] * cantidad} for i in ingredientes],
+            'cantidad': cantidad
         }
     conn.close()
     return render_template('calcular.html', aleaciones=aleaciones, resultado=resultado)
