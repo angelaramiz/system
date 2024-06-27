@@ -30,19 +30,27 @@
                 <input type="text" name="ingrediente" required>
                 <label for="cantidad">Cantidad:</label>
                 <input type="number" name="cantidad" required>
+                <button type="button" onclick="eliminarElemento(this)">Eliminar</button>
             `;
             document.getElementById('ingredientes').appendChild(div);
         }
 
-        function agregarIngredienteTotal() {
-            const div = document.createElement('div');
-            div.innerHTML = `
-                <label for="ingrediente_total">Ingrediente Total Primordial:</label>
-                <input type="text" name="ingrediente_total" required>
-                <label for="cantidad_total">Cantidad:</label>
-                <input type="number" name="cantidad_total" required>
+        function agregarDependencia() {
+            const select = document.createElement('select');
+            select.name = 'dependencia';
+            select.innerHTML = `
+                {% for aleacion in aleaciones %}
+                    <option value="{{ aleacion.id }}">{{ aleacion.nombre }}</option>
+                {% endfor %}
             `;
-            document.getElementById('ingredientes_totales').appendChild(div);
+            const div = document.createElement('div');
+            div.appendChild(select);
+            div.innerHTML += '<button type="button" onclick="eliminarElemento(this)">Eliminar</button>';
+            document.getElementById('dependencias').appendChild(div);
+        }
+
+        function eliminarElemento(button) {
+            button.parentElement.remove();
         }
     </script>
 </head>
@@ -60,27 +68,14 @@
     <form method="post">
         <label for="nombre">Nombre de la Aleación:</label>
         <input type="text" id="nombre" name="nombre" required>
-        <h2>Ingredientes Normales</h2>
-        <div id="ingredientes">
-            <div>
-                <label for="ingrediente">Ingrediente:</label>
-                <input type="text" name="ingrediente" required>
-                <label for="cantidad">Cantidad:</label>
-                <input type="number" name="cantidad" required>
-            </div>
-        </div>
-        <button type="button" onclick="agregarIngrediente()">Agregar otro ingrediente</button>
         
-        <h2>Ingredientes Totales Primordiales</h2>
-        <div id="ingredientes_totales">
-            <div>
-                <label for="ingrediente_total">Ingrediente Total Primordial:</label>
-                <input type="text" name="ingrediente_total" required>
-                <label for="cantidad_total">Cantidad:</label>
-                <input type="number" name="cantidad_total" required>
-            </div>
-        </div>
-        <button type="button" onclick="agregarIngredienteTotal()">Agregar otro ingrediente total primordial</button>
+        <h2>Ingredientes Normales</h2>
+        <div id="ingredientes"></div>
+        <button type="button" onclick="agregarIngrediente()">Agregar otro ingrediente</button>
+
+        <h2>Dependencias</h2>
+        <div id="dependencias"></div>
+        <button type="button" onclick="agregarDependencia()">Agregar dependencia</button>
         
         <button type="submit">Guardar Aleación</button>
     </form>

@@ -30,6 +30,7 @@
             <li><a href="{{ url_for('index') }}">Inicio</a></li>
             <li><a href="{{ url_for('calcular') }}">Calcular Aleaciones</a></li>
             <li><a href="{{ url_for('agregar') }}">Agregar Aleación</a></li>
+            <li><a href="{{ url_for('editar') }}">Editar Aleación</a></li>
             <li><button onclick="toggleMode()">Toggle Dark/Light Mode</button></li>
         </ul>
     </nav>
@@ -48,8 +49,6 @@
 
     {% if resultado %}
         <h2>Resultados para {{ resultado.aleacion.nombre }} ({{ resultado.cantidad }} unidades)</h2>
-        
-        <h3>Ingredientes Normales</h3>
         <table>
             <thead>
                 <tr>
@@ -62,24 +61,6 @@
                 <tr>
                     <td>{{ ingrediente.ingrediente }}</td>
                     <td>{{ ingrediente.cantidad }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <h3>Ingredientes Totales Primordiales</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Ingrediente</th>
-                    <th>Cantidad</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for total in resultado.ingredientes_totales %}
-                <tr>
-                    <td>{{ total.ingrediente }}</td>
-                    <td>{{ total.cantidad }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

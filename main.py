@@ -21,20 +21,38 @@ def calcular():
         aleacion_id = request.form['aleacion']
         cantidad = int(request.form['cantidad'])
         
-        # Obtener ingredientes normales
-        ingredientes = conn.execute('SELECT * FROM Ingredientes WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
-        
-        # Obtener ingredientes totales primordiales
-        ingredientes_totales = conn.execute('SELECT * FROM IngredientesTotales WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
+        ingredientes = get_ingredientes(conn, aleacion_id, cantidad)
         
         resultado = {
             'aleacion': conn.execute('SELECT * FROM Aleaciones WHERE id = ?', (aleacion_id,)).fetchone(),
-            'ingredientes': [{'ingrediente': i['ingrediente'], 'cantidad': i['cantidad'] * cantidad} for i in ingredientes],
-            'ingredientes_totales': [{'ingrediente': i['ingrediente'], 'cantidad': i['cantidad'] * cantidad} for i in ingredientes_totales],
+            'ingredientes': ingredientes,
             'cantidad': cantidad
         }
     conn.close()
     return render_template('calcular.html', aleaciones=aleaciones, resultado=resultado)
+
+def get_ingredientes(conn, aleacion_id, cantidad):
+    ingredientes = {}
+    
+    # Obtener ingredientes directos
+    directos = conn.execute('SELECT * FROM Ingredientes WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
+    for ingrediente in directos:
+        if ingrediente['ingrediente'] in ingredientes:
+            ingredientes[ingrediente['ingrediente']] += ingrediente['cantidad'] * cantidad
+        else:
+            ingredientes[ingrediente['ingrediente']] = ingrediente['cantidad'] * cantidad
+    
+    # Obtener aleaciones de las que depende y sus ingredientes
+    dependencias = conn.execute('SELECT * FROM Dependencias WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
+    for dependencia in dependencias:
+        dep_ingredientes = get_ingredientes(conn, dependencia['depende_de_id'], cantidad)
+        for ingr, cant in dep_ingredientes.items():
+            if ingr in ingredientes:
+                ingredientes[ingr] += cant
+            else:
+                ingredientes[ingr] = cant
+
+    return [{'ingrediente': k, 'cantidad': v} for k, v in ingredientes.items()]
 
 @app.route('/agregar', methods=['GET', 'POST'])
 def agregar():
@@ -42,8 +60,7 @@ def agregar():
         nombre = request.form['nombre']
         ingredientes = request.form.getlist('ingrediente')
         cantidades = request.form.getlist('cantidad')
-        ingredientes_totales = request.form.getlist('ingrediente_total')
-        cantidades_totales = request.form.getlist('cantidad_total')
+        dependencias = request.form.getlist('dependencia')
 
         conn = get_db_connection()
         conn.execute('INSERT INTO Aleaciones (nombre) VALUES (?)', (nombre,))
@@ -52,17 +69,20 @@ def agregar():
         for ingrediente, cantidad in zip(ingredientes, cantidades):
             conn.execute('INSERT INTO Ingredientes (aleacion_id, ingrediente, cantidad) VALUES (?, ?, ?)',
                          (aleacion_id, ingrediente, cantidad))
-
-        for ingrediente_total, cantidad_total in zip(ingredientes_totales, cantidades_totales):
-            conn.execute('INSERT INTO IngredientesTotales (aleacion_id, ingrediente, cantidad) VALUES (?, ?, ?)',
-                         (aleacion_id, ingrediente_total, cantidad_total))
+        
+        for dependencia in dependencias:
+            conn.execute('INSERT INTO Dependencias (aleacion_id, depende_de_id) VALUES (?, ?)',
+                         (aleacion_id, dependencia))
 
         conn.commit()
         conn.close()
 
         return redirect(url_for('index'))
 
-    return render_template('agregar.html')
+    conn = get_db_connection()
+    aleaciones = conn.execute('SELECT * FROM Aleaciones').fetchall()
+    conn.close()
+    return render_template('agregar.html', aleaciones=aleaciones)
 
 @app.route('/editar', methods=['GET', 'POST'])
 def editar():
@@ -74,20 +94,19 @@ def editar():
         nombre = request.form['nombre']
         ingredientes = request.form.getlist('ingrediente')
         cantidades = request.form.getlist('cantidad')
-        ingredientes_totales = request.form.getlist('ingrediente_total')
-        cantidades_totales = request.form.getlist('cantidad_total')
+        dependencias = request.form.getlist('dependencia')
 
         conn.execute('UPDATE Aleaciones SET nombre = ? WHERE id = ?', (nombre, aleacion_id))
         conn.execute('DELETE FROM Ingredientes WHERE aleacion_id = ?', (aleacion_id,))
-        conn.execute('DELETE FROM IngredientesTotales WHERE aleacion_id = ?', (aleacion_id,))
+        conn.execute('DELETE FROM Dependencias WHERE aleacion_id = ?', (aleacion_id,))
 
         for ingrediente, cantidad in zip(ingredientes, cantidades):
             conn.execute('INSERT INTO Ingredientes (aleacion_id, ingrediente, cantidad) VALUES (?, ?, ?)',
                          (aleacion_id, ingrediente, cantidad))
 
-        for ingrediente_total, cantidad_total in zip(ingredientes_totales, cantidades_totales):
-            conn.execute('INSERT INTO IngredientesTotales (aleacion_id, ingrediente, cantidad) VALUES (?, ?, ?)',
-                         (aleacion_id, ingrediente_total, cantidad_total))
+        for dependencia in dependencias:
+            conn.execute('INSERT INTO Dependencias (aleacion_id, depende_de_id) VALUES (?, ?)',
+                         (aleacion_id, dependencia))
 
         conn.commit()
         conn.close()
@@ -101,13 +120,13 @@ def obtener_aleacion(aleacion_id):
     conn = get_db_connection()
     aleacion = conn.execute('SELECT * FROM Aleaciones WHERE id = ?', (aleacion_id,)).fetchone()
     ingredientes = conn.execute('SELECT * FROM Ingredientes WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
-    ingredientes_totales = conn.execute('SELECT * FROM IngredientesTotales WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
+    dependencias = conn.execute('SELECT depende_de_id FROM Dependencias WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
     conn.close()
 
     aleacion_data = {
         'nombre': aleacion['nombre'],
         'ingredientes': [{'ingrediente': i['ingrediente'], 'cantidad': i['cantidad']} for i in ingredientes],
-        'ingredientes_totales': [{'ingrediente': i['ingrediente'], 'cantidad': i['cantidad']} for i in ingredientes_totales]
+        'dependencias': [d['depende_de_id'] for d in dependencias]
     }
     return jsonify(aleacion_data)
 
