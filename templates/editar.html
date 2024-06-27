@@ -30,6 +30,7 @@
                 <input type="text" name="ingrediente" required>
                 <label for="cantidad">Cantidad:</label>
                 <input type="number" name="cantidad" required>
+                <button type="button" onclick="eliminarElemento(this)">Eliminar</button>
             `;
             document.getElementById('ingredientes').appendChild(div);
         }
@@ -41,6 +42,7 @@
                 <input type="text" name="ingrediente_total" required>
                 <label for="cantidad_total">Cantidad:</label>
                 <input type="number" name="cantidad_total" required>
+                <button type="button" onclick="eliminarElemento(this)">Eliminar</button>
             `;
             document.getElementById('ingredientes_totales').appendChild(div);
         }
@@ -54,30 +56,62 @@
 
                     const ingredientesDiv = document.getElementById('ingredientes');
                     ingredientesDiv.innerHTML = '';
-                    data.ingredientes.forEach(ingrediente => {
+                    data.ingredientes.forEach((ingrediente, index) => {
                         const div = document.createElement('div');
                         div.innerHTML = `
-                            <label for="ingrediente">Ingrediente:</label>
-                            <input type="text" name="ingrediente" value="${ingrediente.ingrediente}" required>
+                            <span id="ingrediente-${index}">${ingrediente.ingrediente}</span>
+                            <input type="text" name="ingrediente" value="${ingrediente.ingrediente}" style="display:none;">
+                            <button type="button" onclick="editarIngrediente(${index})">Editar</button>
                             <label for="cantidad">Cantidad:</label>
-                            <input type="number" name="cantidad" value="${ingrediente.cantidad}" required>
+                            <span id="cantidad-${index}">${ingrediente.cantidad}</span>
+                            <input type="number" name="cantidad" value="${ingrediente.cantidad}" style="display:none;">
+                            <button type="button" onclick="editarCantidad(${index})">Editar</button>
+                            <button type="button" onclick="eliminarElemento(this)">Eliminar</button>
                         `;
                         ingredientesDiv.appendChild(div);
                     });
 
                     const ingredientesTotalesDiv = document.getElementById('ingredientes_totales');
                     ingredientesTotalesDiv.innerHTML = '';
-                    data.ingredientes_totales.forEach(ingredienteTotal => {
+                    data.ingredientes_totales.forEach((ingredienteTotal, index) => {
                         const div = document.createElement('div');
                         div.innerHTML = `
-                            <label for="ingrediente_total">Ingrediente Total Primordial:</label>
-                            <input type="text" name="ingrediente_total" value="${ingredienteTotal.ingrediente}" required>
+                            <span id="ingrediente_total-${index}">${ingredienteTotal.ingrediente}</span>
+                            <input type="text" name="ingrediente_total" value="${ingredienteTotal.ingrediente}" style="display:none;">
+                            <button type="button" onclick="editarIngredienteTotal(${index})">Editar</button>
                             <label for="cantidad_total">Cantidad:</label>
-                            <input type="number" name="cantidad_total" value="${ingredienteTotal.cantidad}" required>
+                            <span id="cantidad_total-${index}">${ingredienteTotal.cantidad}</span>
+                            <input type="number" name="cantidad_total" value="${ingredienteTotal.cantidad}" style="display:none;">
+                            <button type="button" onclick="editarCantidadTotal(${index})">Editar</button>
+                            <button type="button" onclick="eliminarElemento(this)">Eliminar</button>
                         `;
                         ingredientesTotalesDiv.appendChild(div);
                     });
                 });
+        }
+
+        function editarIngrediente(index) {
+            document.querySelector(`#ingrediente-${index}`).style.display = 'none';
+            document.querySelector(`#ingrediente-${index} + input`).style.display = 'inline';
+        }
+
+        function editarCantidad(index) {
+            document.querySelector(`#cantidad-${index}`).style.display = 'none';
+            document.querySelector(`#cantidad-${index} + input`).style.display = 'inline';
+        }
+
+        function editarIngredienteTotal(index) {
+            document.querySelector(`#ingrediente_total-${index}`).style.display = 'none';
+            document.querySelector(`#ingrediente_total-${index} + input`).style.display = 'inline';
+        }
+
+        function editarCantidadTotal(index) {
+            document.querySelector(`#cantidad_total-${index}`).style.display = 'none';
+            document.querySelector(`#cantidad_total-${index} + input`).style.display = 'inline';
+        }
+
+        function eliminarElemento(button) {
+            button.parentElement.remove();
         }
     </script>
 </head>

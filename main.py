@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import sqlite3
 
 app = Flask(__name__)
@@ -95,6 +95,21 @@ def editar():
         return redirect(url_for('index'))
 
     return render_template('editar.html', aleaciones=aleaciones)
+
+@app.route('/editar/<int:aleacion_id>', methods=['GET'])
+def obtener_aleacion(aleacion_id):
+    conn = get_db_connection()
+    aleacion = conn.execute('SELECT * FROM Aleaciones WHERE id = ?', (aleacion_id,)).fetchone()
+    ingredientes = conn.execute('SELECT * FROM Ingredientes WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
+    ingredientes_totales = conn.execute('SELECT * FROM IngredientesTotales WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
+    conn.close()
+
+    aleacion_data = {
+        'nombre': aleacion['nombre'],
+        'ingredientes': [{'ingrediente': i['ingrediente'], 'cantidad': i['cantidad']} for i in ingredientes],
+        'ingredientes_totales': [{'ingrediente': i['ingrediente'], 'cantidad': i['cantidad']} for i in ingredientes_totales]
+    }
+    return jsonify(aleacion_data)
 
 if __name__ == '__main__':
     app.run(debug=True)

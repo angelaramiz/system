@@ -200,3 +200,27 @@ body.light-mode li {
         background-color: #1e1e1e;
         color: #e0e0e0;
     }
+/* Iconos de confirmación y cancelación */
+.icon {
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 1.2em;
+}
+
+.icon.confirm {
+    color: green;
+}
+
+.icon.cancel {
+    color: red;
+}
+
+/* Botones de edición */
+button.edit {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    font-size: 1em;
+    margin-left: 5px;
+}
