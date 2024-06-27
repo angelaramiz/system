@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Agregar Aleación</title>
+    <title>Editar Aleación</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
@@ -44,6 +44,41 @@
             `;
             document.getElementById('ingredientes_totales').appendChild(div);
         }
+
+        function cargarAleacion() {
+            const aleacionId = document.getElementById('aleacion').value;
+            fetch(`/editar/${aleacionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('nombre').value = data.nombre;
+
+                    const ingredientesDiv = document.getElementById('ingredientes');
+                    ingredientesDiv.innerHTML = '';
+                    data.ingredientes.forEach(ingrediente => {
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+                            <label for="ingrediente">Ingrediente:</label>
+                            <input type="text" name="ingrediente" value="${ingrediente.ingrediente}" required>
+                            <label for="cantidad">Cantidad:</label>
+                            <input type="number" name="cantidad" value="${ingrediente.cantidad}" required>
+                        `;
+                        ingredientesDiv.appendChild(div);
+                    });
+
+                    const ingredientesTotalesDiv = document.getElementById('ingredientes_totales');
+                    ingredientesTotalesDiv.innerHTML = '';
+                    data.ingredientes_totales.forEach(ingredienteTotal => {
+                        const div = document.createElement('div');
+                        div.innerHTML = `
+                            <label for="ingrediente_total">Ingrediente Total Primordial:</label>
+                            <input type="text" name="ingrediente_total" value="${ingredienteTotal.ingrediente}" required>
+                            <label for="cantidad_total">Cantidad:</label>
+                            <input type="number" name="cantidad_total" value="${ingredienteTotal.cantidad}" required>
+                        `;
+                        ingredientesTotalesDiv.appendChild(div);
+                    });
+                });
+        }
     </script>
 </head>
 <body class="light-mode">
@@ -56,33 +91,26 @@
             <li><button onclick="toggleMode()">Toggle Dark/Light Mode</button></li>
         </ul>
     </nav>
-    <h1>Agregar Aleación</h1>
+    <h1>Editar Aleación</h1>
     <form method="post">
+        <label for="aleacion">Selecciona una aleación:</label>
+        <select name="aleacion" id="aleacion" onchange="cargarAleacion()">
+            <option value="" disabled selected>Selecciona una aleación</option>
+            {% for aleacion in aleaciones %}
+                <option value="{{ aleacion.id }}">{{ aleacion.nombre }}</option>
+            {% endfor %}
+        </select>
         <label for="nombre">Nombre de la Aleación:</label>
         <input type="text" id="nombre" name="nombre" required>
         <h2>Ingredientes Normales</h2>
-        <div id="ingredientes">
-            <div>
-                <label for="ingrediente">Ingrediente:</label>
-                <input type="text" name="ingrediente" required>
-                <label for="cantidad">Cantidad:</label>
-                <input type="number" name="cantidad" required>
-            </div>
-        </div>
+        <div id="ingredientes"></div>
         <button type="button" onclick="agregarIngrediente()">Agregar otro ingrediente</button>
         
         <h2>Ingredientes Totales Primordiales</h2>
-        <div id="ingredientes_totales">
-            <div>
-                <label for="ingrediente_total">Ingrediente Total Primordial:</label>
-                <input type="text" name="ingrediente_total" required>
-                <label for="cantidad_total">Cantidad:</label>
-                <input type="number" name="cantidad_total" required>
-            </div>
-        </div>
+        <div id="ingredientes_totales"></div>
         <button type="button" onclick="agregarIngredienteTotal()">Agregar otro ingrediente total primordial</button>
         
-        <button type="submit">Guardar Aleación</button>
+        <button type="submit">Guardar Cambios</button>
     </form>
 </body>
 </html>

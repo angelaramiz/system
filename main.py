@@ -42,6 +42,8 @@ def agregar():
         nombre = request.form['nombre']
         ingredientes = request.form.getlist('ingrediente')
         cantidades = request.form.getlist('cantidad')
+        ingredientes_totales = request.form.getlist('ingrediente_total')
+        cantidades_totales = request.form.getlist('cantidad_total')
 
         conn = get_db_connection()
         conn.execute('INSERT INTO Aleaciones (nombre) VALUES (?)', (nombre,))
@@ -50,12 +52,49 @@ def agregar():
         for ingrediente, cantidad in zip(ingredientes, cantidades):
             conn.execute('INSERT INTO Ingredientes (aleacion_id, ingrediente, cantidad) VALUES (?, ?, ?)',
                          (aleacion_id, ingrediente, cantidad))
+
+        for ingrediente_total, cantidad_total in zip(ingredientes_totales, cantidades_totales):
+            conn.execute('INSERT INTO IngredientesTotales (aleacion_id, ingrediente, cantidad) VALUES (?, ?, ?)',
+                         (aleacion_id, ingrediente_total, cantidad_total))
+
         conn.commit()
         conn.close()
 
         return redirect(url_for('index'))
 
     return render_template('agregar.html')
+
+@app.route('/editar', methods=['GET', 'POST'])
+def editar():
+    conn = get_db_connection()
+    aleaciones = conn.execute('SELECT * FROM Aleaciones').fetchall()
+
+    if request.method == 'POST':
+        aleacion_id = request.form['aleacion']
+        nombre = request.form['nombre']
+        ingredientes = request.form.getlist('ingrediente')
+        cantidades = request.form.getlist('cantidad')
+        ingredientes_totales = request.form.getlist('ingrediente_total')
+        cantidades_totales = request.form.getlist('cantidad_total')
+
+        conn.execute('UPDATE Aleaciones SET nombre = ? WHERE id = ?', (nombre, aleacion_id))
+        conn.execute('DELETE FROM Ingredientes WHERE aleacion_id = ?', (aleacion_id,))
+        conn.execute('DELETE FROM IngredientesTotales WHERE aleacion_id = ?', (aleacion_id,))
+
+        for ingrediente, cantidad in zip(ingredientes, cantidades):
+            conn.execute('INSERT INTO Ingredientes (aleacion_id, ingrediente, cantidad) VALUES (?, ?, ?)',
+                         (aleacion_id, ingrediente, cantidad))
+
+        for ingrediente_total, cantidad_total in zip(ingredientes_totales, cantidades_totales):
+            conn.execute('INSERT INTO IngredientesTotales (aleacion_id, ingrediente, cantidad) VALUES (?, ?, ?)',
+                         (aleacion_id, ingrediente_total, cantidad_total))
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('index'))
+
+    return render_template('editar.html', aleaciones=aleaciones)
 
 if __name__ == '__main__':
     app.run(debug=True)
