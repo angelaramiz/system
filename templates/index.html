@@ -1,15 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8">
     <title>Inicio</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-  </head>
-  <body>
+    <script>
+        function toggleMode() {
+            const body = document.body;
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+            } else {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+            }
+        }
+    </script>
+</head>
+<body class="light-mode">
+    <button onclick="toggleMode()">Toggle Dark/Light Mode</button>
     <h1>Menú Principal</h1>
     <ul>
-      <li><a href="{{ url_for('calcular') }}">Calcular Aleaciones</a></li>
-      <li><a href="{{ url_for('agregar') }}">Agregar Aleación</a></li>
+        <li><a href="{{ url_for('calcular') }}">Calcular Aleaciones</a></li>
+        <li><a href="{{ url_for('agregar') }}">Agregar Aleación</a></li>
     </ul>
-  </body>
+</body>
 </html>

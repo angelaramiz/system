@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <title>Agregar Aleación</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function toggleMode() {
+            const body = document.body;
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+            } else {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+            }
+        }
+    </script>
 </head>
-<body>
+<body class="light-mode">
+    <button onclick="toggleMode()">Toggle Dark/Light Mode</button>
     <h1>Agregar Aleación</h1>
     <form method="post">
         <label for="nombre">Nombre de la Aleación:</label>
@@ -26,14 +39,3 @@
     <script>
         function agregarIngrediente() {
             const div = document.createElement('div');
-            div.innerHTML = `
-                <label for="ingrediente">Ingrediente:</label>
-                <input type="text" name="ingrediente" required>
-                <label for="cantidad">Cantidad:</label>
-                <input type="number" name="cantidad" required>
-            `;
-            document.getElementById('ingredientes').appendChild(div);
-        }
-    </script>
-</body>
-</html>
