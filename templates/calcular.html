@@ -21,20 +21,36 @@
 
     {% if resultado %}
         <h2>Resultados para {{ resultado.aleacion.nombre }} ({{ resultado.cantidad }} unidades)</h2>
+        
+        <h3>Ingredientes Normales</h3>
         <table>
             <thead>
                 <tr>
-                    <th>Ingrediente Normal</th>
-                    <th>Cantidad</th>
-                    <th>Ingrediente Total</th>
+                    <th>Ingrediente</th>
                     <th>Cantidad</th>
                 </tr>
             </thead>
             <tbody>
-                {% for ingrediente, total in zip(resultado.ingredientes, resultado.ingredientes_totales) %}
+                {% for ingrediente in resultado.ingredientes %}
                 <tr>
                     <td>{{ ingrediente.ingrediente }}</td>
                     <td>{{ ingrediente.cantidad }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Ingredientes Totales Primordiales</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ingrediente</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for total in resultado.ingredientes_totales %}
+                <tr>
                     <td>{{ total.ingrediente }}</td>
                     <td>{{ total.cantidad }}</td>
                 </tr>
