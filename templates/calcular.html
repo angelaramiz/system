@@ -25,7 +25,14 @@
     </script>
 </head>
 <body class="light-mode">
-    <button onclick="toggleMode()">Toggle Dark/Light Mode</button>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('calcular') }}">Calcular Aleaciones</a></li>
+            <li><a href="{{ url_for('agregar') }}">Agregar Aleación</a></li>
+            <li><button onclick="toggleMode()">Toggle Dark/Light Mode</button></li>
+        </ul>
+    </nav>
     <h1>Calcular Aleaciones</h1>
     <form method="post">
         <label for="aleacion">Selecciona una aleación:</label>

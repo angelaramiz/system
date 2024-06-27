@@ -9,7 +9,46 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-h1, h2, h3 {
+nav {
+    width: 100%;
+    background-color: #007bff;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a,
+nav ul li button {
+    color: #fff;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+nav ul li button {
+    padding: 0;
+}
+
+nav ul li a:hover,
+nav ul li button:hover {
+    text-decoration: underline;
+}
+
+h1,
+h2,
+h3 {
     transition: color 0.3s;
 }
 
@@ -26,7 +65,8 @@ label {
     margin-top: 10px;
 }
 
-input, select {
+input,
+select {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
@@ -70,11 +110,14 @@ table {
     transition: background-color 0.3s, color 0.3s;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 1px solid #ddd;
 }
 
-th, td {
+th,
+td {
     padding: 10px;
     text-align: left;
 }
@@ -95,61 +138,65 @@ body.light-mode form,
 body.light-mode li {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+    }
 
-body.light-mode button {
-    background-color: #007bff;
-    color: #fff;
-}
+    body.light-mode button {
+        background-color: #007bff;
+        color: #fff;
+    }
 
-body.light-mode button:hover {
-    background-color: #0056b3;
-}
+    body.light-mode button:hover {
+        background-color: #0056b3;
+    }
 
-body.light-mode a {
-    color: #007bff;
-}
+    body.light-mode a {
+        color: #007bff;
+    }
 
-body.light-mode a:hover {
-    text-decoration: underline;
-}
+    body.light-mode a:hover {
+        text-decoration: underline;
+    }
 
-/* Modo oscuro */
-body.dark-mode {
-    background-color: #121212;
-    color: #e0e0e0;
-}
+    /* Modo oscuro */
+    body.dark-mode {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
 
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode h3 {
-    color: #bb86fc;
-}
+    body.dark-mode nav {
+        background-color: #3700b3;
+    }
 
-body.dark-mode form,
-body.dark-mode li {
-    background-color: #1e1e1e;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
+    body.dark-mode h1,
+    body.dark-mode h2,
+    body.dark-mode h3 {
+        color: #bb86fc;
+    }
 
-body.dark-mode button {
-    background-color: #bb86fc;
-    color: #121212;
-}
+    body.dark-mode form,
+    body.dark-mode li {
+        background-color: #1e1e1e;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
 
-body.dark-mode button:hover {
-    background-color: #3700b3;
-}
+    body.dark-mode button {
+        background-color: #bb86fc;
+        color: #121212;
+    }
 
-body.dark-mode a {
-    color: #bb86fc;
-}
+    body.dark-mode button:hover {
+        background-color: #3700b3;
+    }
 
-body.dark-mode a:hover {
-    text-decoration: underline;
-}
+    body.dark-mode a {
+        color: #bb86fc;
+    }
 
-body.dark-mode table, body.dark-mode th, body.dark-mode td {
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-}
+    body.dark-mode a:hover {
+        text-decoration: underline;
+    }
+
+    body.dark-mode table, body.dark-mode th, body.dark-mode td {
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+    }
