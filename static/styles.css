@@ -72,3 +72,22 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+table {
+    width: 600px;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f8f9fa;
+}

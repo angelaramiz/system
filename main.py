@@ -20,10 +20,17 @@ def calcular():
     if request.method == 'POST':
         aleacion_id = request.form['aleacion']
         cantidad = int(request.form['cantidad'])
+        
+        # Obtener ingredientes normales
         ingredientes = conn.execute('SELECT * FROM Ingredientes WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
+        
+        # Obtener ingredientes totales primordiales
+        ingredientes_totales = conn.execute('SELECT * FROM IngredientesTotales WHERE aleacion_id = ?', (aleacion_id,)).fetchall()
+        
         resultado = {
             'aleacion': conn.execute('SELECT * FROM Aleaciones WHERE id = ?', (aleacion_id,)).fetchone(),
             'ingredientes': [{'ingrediente': i['ingrediente'], 'cantidad': i['cantidad'] * cantidad} for i in ingredientes],
+            'ingredientes_totales': [{'ingrediente': i['ingrediente'], 'cantidad': i['cantidad'] * cantidad} for i in ingredientes_totales],
             'cantidad': cantidad
         }
     conn.close()
